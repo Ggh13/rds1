@@ -2,13 +2,15 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Mm]emoryCaptures/
+Library/ArtifactDB
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -21,6 +23,7 @@
 
 # Visual Studio cache directory
 .vs/
+UserSettings/
 
 # Gradle cache directory
 .gradle/
@@ -48,8 +51,11 @@ ExportedObj/
 *.pdb.meta
 *.mdb.meta
 
+*.dwlt
+
 # Unity3D generated file on crash reports
 sysinfo.txt
+default-2021.dwlt
 
 # Builds
 *.apk
@@ -57,4 +63,10 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
-
+*.meta
+*.meta
+*.png
+*.meta
+*.png
+*.png
+Assets/moisey/tex123/Civilian 1_Beard_diffuse.png
