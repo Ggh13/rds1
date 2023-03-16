@@ -16,6 +16,7 @@ public class qwestManager : MonoBehaviour
     public string[] qw1StatesTextName;
     public string[] qw1StatesText;
     public string[] qw1StatesTextActive;
+    public GameObject buttonsQwM;
 
 
     [Header("SideQwest")]
@@ -51,9 +52,12 @@ public class qwestManager : MonoBehaviour
     public GameObject thisButt;
 
     public int numberOfPicked = 0;
+
+    public flyWings flyWingsgdsg;
     // Start is called before the first frame update
     void Start()
     {
+        flyWingsgdsg.gameObject.SetActive(false);
         Cursor.lockState = listOfQWBool ? CursorLockMode.Confined : CursorLockMode.Locked;
         Cursor.visible = listOfQWBool;
         QwestList.SetActive(listOfQWBool);
@@ -84,17 +88,21 @@ public class qwestManager : MonoBehaviour
                 }
                 else if (state == 2)
                 {
-                    QwTextActive.text = "Убейте главного татара на Севере и заберите чашу";
+                    QwTextActive.text = "Убейте хана на Севере и заберите чашу";
                 }
                 else if(state == 3)
                 {
                     QwTextActive.text = "Возьмите и отнесите чашу в деревню";
                 }
+                else if (state == 4)
+                {
+                    flyWingsgdsg.gameObject.SetActive(true);
+                    
+                }
                 else
                 {
                     swordForMiniMap.SetActive(false);
                 }
-                Debug.Log(qw1StatesText[state - 1]);
             }
             army.SetActive(state > 0);
 
@@ -103,7 +111,15 @@ public class qwestManager : MonoBehaviour
         {
             QwTextName.text = simpleQwestsStatesTextName[numberOfPicked];
             QwText.text = simpleQwestsStatesText[numberOfPicked];
-            QwTextActive.text = simpleQwestsStatesTextNeedToDo[numberOfPicked] + simpleQwestsStatesManager[numberOfPicked].nowGetHave.ToString() + "/" + simpleQwestsStatesManager[numberOfPicked].needGetCount.ToString();
+            if (!simpleQwestsIhaveDo[numberOfPicked])
+            {
+                QwTextActive.text = simpleQwestsStatesTextNeedToDo[numberOfPicked] + simpleQwestsStatesManager[numberOfPicked].nowGetHave.ToString() + "/" + simpleQwestsStatesManager[numberOfPicked].needGetCount.ToString();
+            }
+            else
+            {
+                QwTextActive.text = "ВЫПОЛНЕНО";
+            }
+            
         }
 
 
@@ -121,6 +137,14 @@ public class qwestManager : MonoBehaviour
 
     public void activateMenu()
     {
+        if (activeQw)
+        {
+            buttonsQwM.SetActive(true);
+        }
+        else
+        {
+            buttonsQwM.SetActive(false);
+        }
         listOfQWBool = !listOfQWBool;
         Cursor.lockState = listOfQWBool ? CursorLockMode.Confined : CursorLockMode.Locked;
         Cursor.visible = listOfQWBool;
@@ -136,6 +160,13 @@ public class qwestManager : MonoBehaviour
 
     }
 
+    public void ActiveQWSimple(int qwNum)
+    {
+        simpleQwestsActive[qwNum] = true;
+        
+        //UpdateFirstName();
+
+    }
     public void qwestReady(int numOfQwest)
     {
         simpleQwestsIhaveDo[numOfQwest] = true;
@@ -167,7 +198,7 @@ public class qwestManager : MonoBehaviour
         else
         {
             simpleQwestsActive[numOfQwest] = false;
-            thisButt.SetActive(false);
+            buttons[numOfQwest].SetActive(false);
         }
         
     }
@@ -211,7 +242,15 @@ public class qwestManager : MonoBehaviour
 
                 TextName.text = simpleQwestsStatesTextName[numOfQwest];
                 TextOptions.text = simpleQwestsStatesText[numOfQwest];
-                TextNeedToDo.text = simpleQwestsStatesTextNeedToDo[numOfQwest];
+                if (!simpleQwestsIhaveDo[numOfQwest])
+                {
+                    TextNeedToDo.text = simpleQwestsStatesTextNeedToDo[numOfQwest];
+                }
+                else
+                {
+                    TextNeedToDo.text = "ВЫПОЛНЕНО";
+                }
+                
             }
 
             QwestListAdd.SetActive(true);

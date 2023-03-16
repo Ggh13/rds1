@@ -11,23 +11,40 @@ public class flyWings : MonoBehaviour
     public Image wing2;
     public Image wing3;
     public Text wing4;
-    void Start()
+
+    public float t = 0f;
+    public float t2 = 0f;
+
+    public int countDebug = 0;
+    public bool starte = false;
+    void Awake()
     {
-        StartCoroutine(goUp());
+        
+        countDebug += 7000;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (!starte)
+        {
+            starte = true;
+            goUpFunc();
+        }
+    }
+    public void goUpFunc()
+    {
+       // StartCoroutine(goUp());
     }
     public IEnumerator goUp()
     {
-        float t = 0f;
-        float t2 = 0f;
+        t = 0f;
+        t2 = 0f;
         Transform start = transform;
+        countDebug += 100;
         while (t < 1)
         {
+            countDebug += 2;
             t += 0.001f;
             t2 += 0.007f;
             yield return new WaitForSeconds(0.05f);
@@ -38,7 +55,7 @@ public class flyWings : MonoBehaviour
             wing4.color = Color.Lerp(new Color32(254, 254, 254, 254), new Color32(254, 254, 254, 0), t2);
 
         }
-        transform.position = start.position;
+        //transform.position = start.position;
      
     }
 }

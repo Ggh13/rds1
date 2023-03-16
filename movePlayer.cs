@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 
 public class movePlayer : player_stats, IDamagable
 {
+
+    public bool CantMoveBecouseDialog = false;
+
+
     public int nowSkin;
     public GameObject[] skins;
     public GameObject[] skins2;
@@ -109,6 +113,8 @@ public class movePlayer : player_stats, IDamagable
 
 
     public Text moneyText;
+
+    public bool getDamageB = false;
     private void Start()
     {
         fireBall(1);
@@ -124,6 +130,10 @@ public class movePlayer : player_stats, IDamagable
     }
     private void Update()
     {
+        if(hp <= 0)
+        {
+            SceneManager.LoadScene("NTOwithPP");
+        }
         for(int i = 0; i < skins.Length; i++)
         {
             skins[i].SetActive(false);
@@ -185,21 +195,24 @@ public class movePlayer : player_stats, IDamagable
 
         //*** Блок с ускорение персонажа
         stamina_res();
-        if (Input.GetKey(KeyCode.LeftShift) && stamina >= exp_run)
+        if (!CantMoveBecouseDialog)
         {
-            stamina -= exp_run;
-            _currentSpeed = _runSpeed;
-            animAllInteger("goState", 2);
-            walkSound.SetActive(false);
-            runSound.SetActive(true);
-        }
-        else
-        {
-            //stamina += stamina_res_count;
-            _currentSpeed = _moveSpeed;
-            animAllInteger("goState", 1);
-            walkSound.SetActive(true);
-            runSound.SetActive(false);
+            if (Input.GetKey(KeyCode.LeftShift) && stamina >= exp_run)
+            {
+                stamina -= exp_run;
+                _currentSpeed = _runSpeed;
+                animAllInteger("goState", 2);
+                walkSound.SetActive(false);
+                runSound.SetActive(true);
+            }
+            else
+            {
+                //stamina += stamina_res_count;
+                _currentSpeed = _moveSpeed;
+                animAllInteger("goState", 1);
+                walkSound.SetActive(true);
+                runSound.SetActive(false);
+            }
         }
 
 
@@ -245,23 +258,28 @@ public class movePlayer : player_stats, IDamagable
 
             Quaternion deltaRotate = Quaternion.Lerp(_thisTransform.rotation, desiredRotation, _smoothRotate);
 
-            _thisTransform.rotation = deltaRotate;
-
+            if (!CantMoveBecouseDialog)
+            {
+                _thisTransform.rotation = deltaRotate;
+            }
         }
         else
         {
             animAllInteger("goState", 0);
         }
+        if (!CantMoveBecouseDialog)
+        {
+            if (!rollContinue)
+            {
+                moveRollDerec = moveDirection;
+                characterController.Move(moveDirection * _currentSpeed + new Vector3(0, gravity, 0));
+            }
+            else
+            {
+                characterController.Move(moveRollDerec * rollSped + new Vector3(0, gravity, 0));
+            }
+        }
         
-        if (!rollContinue)
-        {
-            moveRollDerec = moveDirection;
-            characterController.Move(moveDirection * _currentSpeed + new Vector3(0, gravity, 0));
-        }
-        else
-        {
-            characterController.Move(moveRollDerec * rollSped + new Vector3(0, gravity, 0));
-        }
 
         if (!rollContinue && Input.GetKey(KeyCode.Space))
         {
@@ -368,16 +386,30 @@ public class movePlayer : player_stats, IDamagable
 
     public IEnumerator swapBom()
     {
+        soundsMech();
         attackOfSword = true;
-        yield return new WaitForSeconds(1f);
         allOffSounds();
-        swordSound[Random.Range(0, swordSound.Length)].SetActive(true);
+        yield return new WaitForSeconds(1f);
         yield return new WaitForSeconds(1.3f);
         attackOfSword = false;
     }
 
+    public IEnumerator swapBomSounds()
+    {
+        allOffSounds();
+        yield return new WaitForSeconds(0.7f);
+        swordSound[Random.Range(0, swordSound.Length)].SetActive(true);
+        yield return new WaitForSeconds(1.3f);
+    }
+
+    public void soundsMech()
+    {
+        StartCoroutine(swapBomSounds());
+    }
+
     public void getDamage(int damage)
     {
+        getDamageB = true;
         hp -= damage;
     }
 
@@ -506,4 +538,6 @@ public class movePlayer : player_stats, IDamagable
     {
         nowSkin = 1;
     }
+
+    
 }

@@ -59,6 +59,7 @@ public class product : MonoBehaviour
 
     public void destroyYourself()
     {
-        //Destroy(gameObject);
+        
+        Destroy(gameObject);
     }
 }
